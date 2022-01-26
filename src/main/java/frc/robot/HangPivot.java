@@ -2,7 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
+import frc.robot.TalonEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -10,24 +10,23 @@ public class HangPivot {
     
     //MOTOR (775) & VERSA-PLANETARY ENCODER
     private MotorController hangPivot;
-    private Encoder pivotEncoder;       //MAY NOT BE THE RIGHT ENCODER CLASS
+    private TalonEncoder pivotEncoder;       //MAY NOT BE THE RIGHT ENCODER CLASS
 
     //LIMIT SWITCHES
-    private DigitalInput frontSwitch;
+    private DigitalInput frontSwitch;   
     private DigitalInput backSwitch;
 
     //GYRO (NAVX)
     private AHRS navX;
 
     //VARIABLES [SUBJECT TO CHANGE]
-    private final double forwardPivotPos = 0.0;
-    private final double backwardPivotPos = 0.0;
-    private final double homePos = 0.0;
+    private final double inwardPivotPos = 0.0;
+    private final double outwardPivotPos = 0.0;
     
-    private final double forwardPivotSpeed = 0.0;
-    private final double backwardPivotSpeed = 0.0;
+    private final double inwardPivotSpeed = 0.0;
+    private final double outwardPivotSpeed = 0.0;
     
-    public HangPivot (MotorController pivotMotor, Encoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){   //CONSTRUCTOR
+    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){   //CONSTRUCTOR
         hangPivot = pivotMotor;
         pivotEncoder = hangPivotEncoder;
         frontSwitch = frontLimitSwitch;
@@ -36,7 +35,7 @@ public class HangPivot {
     }
 
     private enum States{
-        PIVOTFORWARD, PIVOTBACK, HOME, TESTING;
+        PIVOTFORWARD, PIVOTBACK, TESTING;
     }
 
     //SETTING STATES
@@ -50,10 +49,6 @@ public class HangPivot {
         pivotState = States.PIVOTBACK;
     }
 
-    public void setHome(){
-        pivotState = States.HOME;
-    }
-
     //CHECKS
     private boolean backLimitTouched(){
         return backSwitch.get();
@@ -63,11 +58,15 @@ public class HangPivot {
         return frontSwitch.get();
     }
 
+    public void resetEnc(){
+        pivotEncoder.reset();
+    }
+
     //METHODS
-    private void pivotForward(){
+    private void pivotOutward(){
         if(!backLimitTouched()){
-            if(pivotEncoder.get() < forwardPivotPos){
-                hangPivot.set(forwardPivotSpeed);
+            if(pivotEncoder.get() > outwardPivotPos){
+                hangPivot.set(outwardPivotSpeed);
             }
         }
 
@@ -76,10 +75,10 @@ public class HangPivot {
         }
     }
 
-    private void pivotBackward(){
+    private void pivotInward(){
         if(!frontLimitTouched()){
-            if(pivotEncoder.get() > backwardPivotPos){
-                hangPivot.set(backwardPivotSpeed);
+            if(pivotEncoder.get() < inwardPivotPos){
+                hangPivot.set(inwardPivotSpeed);
             }
         }
 
@@ -87,11 +86,21 @@ public class HangPivot {
             hangPivot.set(0);
         }
     }
-
+/*
     private void pivotHome(){
-        
-    }
+        if(pivotEncoder.get() > outwardPivotPos && pivotEncoder.get() < homePos){
+            hangPivot.set(inwardPivotSpeed); 
+        }
 
+        else if(pivotEncoder.get() < inwardPivotSpeed && pivotEncoder.get() > homePos){
+            hangPivot.set(outwardPivotPos);
+        }
+
+        else{
+            hangPivot.set(0);
+        }
+    }
+*/
     private void testing(){ //METHOD FOR TESTING CODE
 
     }
@@ -101,6 +110,7 @@ public class HangPivot {
         SmartDashboard.putBoolean("BACK LIMIT", backSwitch.get());
         SmartDashboard.putBoolean("FRONT LIMIT", frontSwitch.get());
         SmartDashboard.putNumber("PIVOT ENCODER", pivotEncoder.get());
+        SmartDashboard.putNumber("NAVX PITCH", navX.getPitch());
         
         switch(pivotState){
             
@@ -109,15 +119,16 @@ public class HangPivot {
             break;
 
             case PIVOTFORWARD:
-            pivotForward();
+            pivotOutward();
             break;
 
             case PIVOTBACK:
-            pivotBackward();
+            pivotInward();
             break;
 
-            case HOME:
-            
+            default:
+            testing();
+            break;
 
         }
     }
