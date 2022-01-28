@@ -113,6 +113,10 @@ public class Robot extends TimedRobot {
       hangPivotClass.setPivInward();
     }
 
+    else{
+      hangPivotClass.setStop();
+    }
+
     hangPivotClass.run();
     
   }

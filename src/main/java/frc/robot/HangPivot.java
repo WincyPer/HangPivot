@@ -19,8 +19,8 @@ public class HangPivot {
     private AHRS navX;
 
     //  VARIABLES [SUBJECT TO CHANGE]  //
-    private final double inwardPivotPos = 1000.00;
-    private final double outwardPivotPos = -1300.00;
+    private final double inwardPivotPos = -1100.0;
+    private final double outwardPivotPos = -1500.0;
     private final double inwardPivotSpeed = 0.25;
     private final double outwardPivotSpeed = -0.25;
     
@@ -75,6 +75,10 @@ public class HangPivot {
         if(backLimitTouched()){
             if(pivotEncoder.get() > outwardPivotPos){
                 hangPivot.set(outwardPivotSpeed);
+            }
+
+            else{
+                hangPivot.set(0);
             }
         }
 
