@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     joystick = new Joystick(0);
-    hangPivotMotor = new WPI_TalonSRX(3);   //PORTS ARE NOT FINAL
+    hangPivotMotor = new WPI_TalonSRX(3);   //PORTS ARE NOT FINAL, THESE PORTS ARE FROM OLD ROBOT
     hangPivotEncoder = new TalonEncoder(hangPivotMotor);    
     backPivotSwitch = new DigitalInput(3);
     frontPivotSwitch = new DigitalInput(4);
