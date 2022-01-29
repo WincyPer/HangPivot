@@ -7,6 +7,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class HangPivot {
     
+    /////////////////////////////////////////////
+    //                                         //
+    //                VARIABLES                //
+    //                                         //
+    /////////////////////////////////////////////
+
     //  MOTOR (775) & VERSA-PLANETARY ENCODER  //
     private MotorController hangPivot;
     private TalonEncoder pivotEncoder;       
@@ -23,9 +29,14 @@ public class HangPivot {
     private final double outwardPivotPos = -1500.0;
     private final double inwardPivotSpeed = 0.25;
     private final double outwardPivotSpeed = -0.25;
+
+    /////////////////////////////////////////////
+    //                                         //
+    //              CONSTRUCTOR                //
+    //                                         //
+    /////////////////////////////////////////////
     
-    //  CONSTRUCTOR  //
-    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){   //CONSTRUCTOR
+    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){  
         hangPivot = pivotMotor;
         pivotEncoder = hangPivotEncoder;
         frontSwitch = frontLimitSwitch;
@@ -33,7 +44,12 @@ public class HangPivot {
         navX = gyro;
     }
 
-    //  ENUMERATION STATES  //
+    /////////////////////////////////////////////
+    //                                         //
+    //               ENUMERATION               //
+    //                                         //
+    /////////////////////////////////////////////
+
     private enum States{
         PIVOTINWARD, PIVOTOUTWARD, STOP, TESTING;
     }
@@ -56,8 +72,13 @@ public class HangPivot {
     public void setStop(){
         pivotState = States.STOP;
     }
+    
+    /////////////////////////////////////////////
+    //                                         //
+    //                 CHECKS                  //
+    //                                         //
+    /////////////////////////////////////////////
 
-    //  CHECKS  //
     private boolean backLimitTouched(){     //RETURNS VALUE OF BACK LIMIT SWITCH
         return backSwitch.get();
     }
@@ -66,7 +87,12 @@ public class HangPivot {
         return frontSwitch.get();
     }
 
-    //  METHODS  //
+    /////////////////////////////////////////////
+    //                                         //
+    //                 METHODS                 //
+    //                                         //
+    /////////////////////////////////////////////
+
     public void resetEnc(){     //RESETS ENCODERS FOR THE PIVOT MOTOR
         pivotEncoder.reset();
     }
@@ -103,9 +129,9 @@ public class HangPivot {
         }
     }
 
-    private void manualPivotInward(){       //MANUALLY PIVOT INWARD
-        if(!frontLimitTouched()){       //IF THE FRONT LIMIT IS NOT TOUCHED, PIVOT INWARD
-            hangPivot.set(inwardPivotSpeed);       
+    private void manualPivotOutward(){      //MANUALLY PIVOT OUTWARD
+        if(backLimitTouched()){        //
+            hangPivot.set(outwardPivotSpeed);
         }
 
         else{
@@ -113,9 +139,9 @@ public class HangPivot {
         }
     }
 
-    private void manualPivotOutward(){      //MANUALLY PIVOT OUTWARD
-        if(!backLimitTouched()){        //
-            hangPivot.set(outwardPivotSpeed);
+    private void manualPivotInward(){       //MANUALLY PIVOT INWARD
+        if(frontLimitTouched()){       //IF THE FRONT LIMIT IS NOT TOUCHED, PIVOT INWARD
+            hangPivot.set(inwardPivotSpeed);       
         }
 
         else{
@@ -127,29 +153,19 @@ public class HangPivot {
         hangPivot.set(pivotSpeed);
     }
 
-/*
-    private void pivotHome(){
-        if(pivotEncoder.get() > outwardPivotPos && pivotEncoder.get() < homePos){
-            hangPivot.set(inwardPivotSpeed); 
-        }
-
-        else if(pivotEncoder.get() < inwardPivotSpeed && pivotEncoder.get() > homePos){
-            hangPivot.set(outwardPivotPos);
-        }
-
-        else{
-            hangPivot.set(0);
-        }
-    }
-*/
-
     private void stopPivot(){       //STOPS HANG PIVOT
         hangPivot.set(0);
     }
 
     private void testing(){     //METHOD FOR TESTING CODE (NOTHING)
-
+    
     }
+
+    /////////////////////////////////////////////
+    //                                         //
+    //                   RUN                   //
+    //                                         //
+    /////////////////////////////////////////////
 
     public void run(){      //RUN METHOD WITH SMART DASHBOARD DISPLAYS AND STATE SWITCHES
 
