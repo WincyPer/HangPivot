@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.Timer;
 
 public class HangPivot {
     
@@ -30,18 +31,23 @@ public class HangPivot {
     private final double inwardPivotSpeed = 0.25;
     private final double outwardPivotSpeed = -0.25;
 
+    private int pivotHangCounter = 0;
+    private Timer timer;
+    private int timerTest; 
+
     /////////////////////////////////////////////
     //                                         //
     //              CONSTRUCTOR                //
     //                                         //
     /////////////////////////////////////////////
     
-    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){  
+    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch, Timer hangTimer){  
         hangPivot = pivotMotor;
         pivotEncoder = hangPivotEncoder;
         frontSwitch = frontLimitSwitch;
         backSwitch = backLimitSwitch;
         navX = gyro;
+        timer = new Timer();
     }
 
     /////////////////////////////////////////////
@@ -51,7 +57,7 @@ public class HangPivot {
     /////////////////////////////////////////////
 
     private enum States{
-        PIVOTINWARD, PIVOTOUTWARD, STOP, TESTING;
+        PIVOTINWARD, PIVOTOUTWARD, PIVOTMID, STOP, TESTING;
     }
 
     //  SETTING STATES  //
@@ -63,6 +69,10 @@ public class HangPivot {
 
     public void setPivOutward(){
         pivotState = States.PIVOTOUTWARD;
+    }
+
+    public void setPivotMid(){
+        pivotState = States.PIVOTMID;
     }
 
     public void setTesting(){
@@ -85,6 +95,10 @@ public class HangPivot {
 
     private boolean frontLimitTouched(){    //RETURNS VALUE OF FRONT LIMIT SWITCH
         return frontSwitch.get();
+    }
+
+    private boolean pivotIsOutward(){
+        return timer.get() > 3;
     }
 
     /////////////////////////////////////////////
@@ -142,7 +156,7 @@ public class HangPivot {
     private void manualPivotInward(){       //MANUALLY PIVOT INWARD
         if(frontLimitTouched()){       //IF THE FRONT LIMIT IS NOT TOUCHED, PIVOT INWARD
             hangPivot.set(inwardPivotSpeed);       
-        }
+        
 
         else{
             hangPivot.set(0);
@@ -161,6 +175,13 @@ public class HangPivot {
     
     }
 
+    public void resetCounters(){
+        pivotHangCounter = 0;
+        timerTest = 0;
+    }
+
+    
+
     /////////////////////////////////////////////
     //                                         //
     //                   RUN                   //
@@ -175,6 +196,7 @@ public class HangPivot {
         SmartDashboard.putBoolean("FRONT LIMIT", frontSwitch.get());
         SmartDashboard.putNumber("PIVOT ENCODER", pivotEncoder.get());
         SmartDashboard.putNumber("NAVX PITCH", navX.getPitch());
+        SmartDashboard.putNumber("MID PIVOT CASE", timerTest);
         
         switch(pivotState){
             
@@ -183,11 +205,16 @@ public class HangPivot {
             break;
 
             case PIVOTOUTWARD:
-            pivotOutward();
+            manualPivotOutward();
             break;
 
             case PIVOTINWARD:
-            pivotInward();
+            manualPivotInward();
+            break;
+
+            case PIVOTMID:
+            //pivotOntoMid();
+            pivotOutward3Secs(); 
             break;
 
             case STOP:

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 
 
 public class Robot extends TimedRobot {
@@ -28,6 +29,7 @@ public class Robot extends TimedRobot {
   private DigitalInput backPivotSwitch;
   private DigitalInput frontPivotSwitch;
   private AHRS navX;
+  private Timer pivotTimer;
 
   private HangPivot hangPivotClass;
 
@@ -44,7 +46,7 @@ public class Robot extends TimedRobot {
     frontPivotSwitch = new DigitalInput(4);
     navX = new AHRS (SPI.Port.kMXP);
 
-    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch);
+    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch, pivotTimer);
 
   }
 
@@ -113,6 +115,10 @@ public class Robot extends TimedRobot {
       hangPivotClass.setPivInward();
     }
 
+    else if(joystick.getRawButton(7)){
+      hangPivotClass.setPivotMid();
+    }
+
     else{
       hangPivotClass.setStop();
     }
@@ -129,6 +135,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     hangPivotClass.setStop();
+    hangPivotClass.resetCounters();
   }
 
   /** This function is called once when test mode is enabled. */
