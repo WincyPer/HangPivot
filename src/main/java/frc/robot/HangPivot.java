@@ -57,7 +57,7 @@ public class HangPivot {
     /////////////////////////////////////////////
 
     private enum States{
-        PIVOTINWARD, PIVOTOUTWARD, PIVOTMID, STOP, TESTING;
+        PIVOTINWARD, PIVOTOUTWARD, STOP, TESTING;
     }
 
     //  SETTING STATES  //
@@ -69,10 +69,6 @@ public class HangPivot {
 
     public void setPivOutward(){
         pivotState = States.PIVOTOUTWARD;
-    }
-
-    public void setPivotMid(){
-        pivotState = States.PIVOTMID;
     }
 
     public void setTesting(){
@@ -158,6 +154,10 @@ public class HangPivot {
     private void stopPivot(){       //STOPS HANG PIVOT
         hangPivot.set(0);
     }
+
+    private void testing(){
+
+    }
     
 
     /////////////////////////////////////////////
@@ -188,11 +188,6 @@ public class HangPivot {
 
             case PIVOTINWARD:
             manualPivotInward();
-            break;
-
-            case PIVOTMID:
-            //pivotOntoMid();
-            pivotOutward3Secs(); 
             break;
 
             case STOP:

@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
     }
 
     else if(joystick.getRawButton(7)){
-      hangPivotClass.setPivotMid();
+      
     }
 
     else{
@@ -135,7 +135,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     hangPivotClass.setStop();
-    hangPivotClass.resetCounters();
   }
 
   /** This function is called once when test mode is enabled. */
