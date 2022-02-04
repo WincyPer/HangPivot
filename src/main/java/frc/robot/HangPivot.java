@@ -144,23 +144,11 @@ public class HangPivot {
     }
 
     private void manualPivotOutward(){      //MANUALLY PIVOT OUTWARD
-        if(backLimitTouched()){        //
-            hangPivot.set(outwardPivotSpeed);
-        }
-
-        else{
-            hangPivot.set(0);
-        }
+        hangPivot.set(outwardPivotSpeed);
     }
 
     private void manualPivotInward(){       //MANUALLY PIVOT INWARD
-        if(frontLimitTouched()){       //IF THE FRONT LIMIT IS NOT TOUCHED, PIVOT INWARD
-            hangPivot.set(inwardPivotSpeed);       
-        
-
-        else{
-            hangPivot.set(0);
-        }
+        hangPivot.set(inwardPivotSpeed);       
     }
 
     public void manualPivot(double pivotSpeed){     //MANUALLY MOVE THE PIVOT MOTOR WITH JOYSTICK
@@ -170,16 +158,6 @@ public class HangPivot {
     private void stopPivot(){       //STOPS HANG PIVOT
         hangPivot.set(0);
     }
-
-    private void testing(){     //METHOD FOR TESTING CODE (NOTHING)
-    
-    }
-
-    public void resetCounters(){
-        pivotHangCounter = 0;
-        timerTest = 0;
-    }
-
     
 
     /////////////////////////////////////////////
