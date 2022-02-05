@@ -31,8 +31,8 @@ public class HangPivot {
     private final double midPivotPos = -1300.0; 
     private final double inwardPivotSpeed = 0.25;
     private final double outwardPivotSpeed = -0.25;
+    private final double grabbingHighPivotPos = -1400.0; 
 
-    private int pivotHangCounter = 0;
     private Timer timer;
     private int timerTest; 
 
@@ -94,15 +94,19 @@ public class HangPivot {
         return frontSwitch.get();
     }
 
-    public boolean outwardLimitReached(){      //CHECKS IF PIVOT ENCODER REACHED OUTWARD
+    public boolean outwardEncReached(){      //CHECKS IF PIVOT ENCODER REACHED OUTWARD
         return pivotEncoder.get() > outwardPivotPos;
     }
 
-    public boolean inwardLimitReached(){       //CHECKS IF PIVOT ENCODER REACHED INWARD
+    public boolean inwardEncReached(){       //CHECKS IF PIVOT ENCODER REACHED INWARD
         return pivotEncoder.get() < inwardPivotPos;
     }
 
-    public boolean afterMidLimit() {
+    public boolean grabbingHigh(){
+        return pivotEncoder.get() < grabbingHighPivotPos; 
+    }
+    
+    public boolean middleEncReached() {
         return pivotEncoder.get() < midPivotPos; 
     }
 
