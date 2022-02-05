@@ -86,24 +86,24 @@ public class HangPivot {
     //                                         //
     /////////////////////////////////////////////
     //DIRECTIONS ARE NOT FINAL
-    private boolean backLimitTouched(){     //RETURNS VALUE OF BACK LIMIT SWITCH
-        return !backSwitch.get();
+    public boolean backLimitTouched(){     //RETURNS VALUE OF BACK LIMIT SWITCH
+        return backSwitch.get();
     }
 
-    private boolean frontLimitTouched(){    //RETURNS VALUE OF FRONT LIMIT SWITCH
-        return !frontSwitch.get();
+    public boolean frontLimitTouched(){    //RETURNS VALUE OF FRONT LIMIT SWITCH
+        return frontSwitch.get();
     }
 
-    private boolean outwardLimitReached(){      //CHECKS IF PIVOT ENCODER REACHED OUTWARD
+    public boolean outwardLimitReached(){      //CHECKS IF PIVOT ENCODER REACHED OUTWARD
         return pivotEncoder.get() > outwardPivotPos;
     }
 
-    private boolean inwardLimitReached(){       //CHECKS IF PIVOT ENCODER REACHED INWARD
+    public boolean inwardLimitReached(){       //CHECKS IF PIVOT ENCODER REACHED INWARD
         return pivotEncoder.get() < inwardPivotPos;
     }
 
-    private boolean afterMidLimit() {
-        return (pivotEncoder.get() < midPivotPos && pivotEncoder.get() > outwardPivotPos); 
+    public boolean afterMidLimit() {
+        return pivotEncoder.get() < midPivotPos; 
     }
 
     /////////////////////////////////////////////
@@ -116,7 +116,7 @@ public class HangPivot {
         pivotEncoder.reset();
     }
 
-    private void pivotOutward(){    //PIVOTS OUTWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS [INWARD = TOWARDS ROBOT BASE, OUTWARD = TOWARDS ROBOT PERIMETER]
+    public void pivotOutwardLim(){    //PIVOTS OUTWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS [INWARD = TOWARDS ROBOT BASE, OUTWARD = TOWARDS ROBOT PERIMETER]
         if(backLimitTouched()){
             hangPivot.set(0);
         }
@@ -132,7 +132,7 @@ public class HangPivot {
         }
     }
 
-    private void pivotInward(){     //PIVOTS INWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS
+    public void pivotInwardLim(){     //PIVOTS INWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS
         if(frontLimitTouched()){   //IF THE FRONT LIMIT IS NOT TOUCHED
             hangPivot.set(0);
         }
@@ -148,11 +148,11 @@ public class HangPivot {
         }
     }
 
-    private void manualPivotOutward(){      //MANUALLY PIVOT OUTWARD
+    public void pivotOutward(){      //MANUALLY PIVOT OUTWARD
         hangPivot.set(outwardPivotSpeed);
     }
 
-    private void manualPivotInward(){       //MANUALLY PIVOT INWARD
+    public void pivotInward(){       //MANUALLY PIVOT INWARD
         hangPivot.set(inwardPivotSpeed);       
     }
 
@@ -160,7 +160,7 @@ public class HangPivot {
         hangPivot.set(pivotSpeed);
     }
 
-    private void stopPivot(){       //STOPS HANG PIVOT
+    public void stopPivot(){       //STOPS HANG PIVOT
         hangPivot.set(0);
     }
 
@@ -192,11 +192,11 @@ public class HangPivot {
             break;
 
             case PIVOTOUTWARD:
-            manualPivotOutward();
+            pivotOutward();
             break;
 
             case PIVOTINWARD:
-            manualPivotInward();
+            pivotInward();
             break;
 
             case STOP:
