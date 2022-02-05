@@ -194,11 +194,11 @@ public class HangPivot {
             break;
 
             case PIVOTOUTWARD:
-            pivotOutward();
+            pivotOutwardLim();
             break;
 
             case PIVOTINWARD:
-            pivotInward();
+            pivotInwardLim();
             break;
 
             case STOP:
