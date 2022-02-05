@@ -29,7 +29,6 @@ public class Robot extends TimedRobot {
   private DigitalInput backPivotSwitch;
   private DigitalInput frontPivotSwitch;
   private AHRS navX;
-  private Timer pivotTimer;
 
   private HangPivot hangPivotClass;
 
@@ -46,7 +45,7 @@ public class Robot extends TimedRobot {
     frontPivotSwitch = new DigitalInput(4);
     navX = new AHRS (SPI.Port.kMXP);
 
-    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch, pivotTimer);
+    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch);
 
   }
 

@@ -33,7 +33,6 @@ public class HangPivot {
     private final double outwardPivotSpeed = -0.25;
     private final double grabbingHighPivotPos = -1400.0; 
 
-    private Timer timer;
     private int timerTest; 
 
     /////////////////////////////////////////////
@@ -42,13 +41,12 @@ public class HangPivot {
     //                                         //
     /////////////////////////////////////////////
     
-    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch, Timer hangTimer){  
+    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){  
         hangPivot = pivotMotor;
         pivotEncoder = hangPivotEncoder;
         frontSwitch = frontLimitSwitch;
         backSwitch = backLimitSwitch;
         navX = gyro;
-        timer = new Timer();
     }
 
     /////////////////////////////////////////////
@@ -102,11 +100,11 @@ public class HangPivot {
         return pivotEncoder.get() < inwardPivotPos;
     }
 
-    public boolean grabbingHigh(){
+    public boolean grabbingHigh(){      //CHECKS IF PIVOT ENCODER REACHED HIGH BAR
         return pivotEncoder.get() < grabbingHighPivotPos; 
     }
-    
-    public boolean middleEncReached() {
+
+    public boolean middleEncReached() {     //CHECKS IF PIVOT IS PERPENDICULAR TO FLOOR
         return pivotEncoder.get() < midPivotPos; 
     }
 
@@ -126,7 +124,7 @@ public class HangPivot {
         }
 
         else{
-            if(outwardLimitReached()){
+            if(outwardEncReached()){
                 hangPivot.set(outwardPivotSpeed);
             }
 
@@ -142,7 +140,7 @@ public class HangPivot {
         }
 
         else{
-            if(inwardLimitReached()){    //IF THE PIVOT ENCODER IS LESS THAN ITS POSITION, PIVOT INWARD
+            if(inwardEncReached()){    //IF THE PIVOT ENCODER IS LESS THAN ITS POSITION, PIVOT INWARD
                 hangPivot.set(inwardPivotSpeed);
             }
 
