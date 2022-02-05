@@ -28,6 +28,7 @@ public class HangPivot {
     //  VARIABLES [SUBJECT TO CHANGE]  //
     private final double inwardPivotPos = -1100.0;
     private final double outwardPivotPos = -1500.0;
+    private final double midPivotPos = -1300.0; 
     private final double inwardPivotSpeed = 0.25;
     private final double outwardPivotSpeed = -0.25;
 
@@ -86,11 +87,11 @@ public class HangPivot {
     /////////////////////////////////////////////
     //DIRECTIONS ARE NOT FINAL
     private boolean backLimitTouched(){     //RETURNS VALUE OF BACK LIMIT SWITCH
-        return backSwitch.get();
+        return !backSwitch.get();
     }
 
     private boolean frontLimitTouched(){    //RETURNS VALUE OF FRONT LIMIT SWITCH
-        return frontSwitch.get();
+        return !frontSwitch.get();
     }
 
     private boolean outwardLimitReached(){      //CHECKS IF PIVOT ENCODER REACHED OUTWARD
@@ -99,6 +100,10 @@ public class HangPivot {
 
     private boolean inwardLimitReached(){       //CHECKS IF PIVOT ENCODER REACHED INWARD
         return pivotEncoder.get() < inwardPivotPos;
+    }
+
+    private boolean afterMidLimit() {
+        return (pivotEncoder.get() < midPivotPos && pivotEncoder.get() > outwardPivotPos); 
     }
 
     /////////////////////////////////////////////
@@ -113,6 +118,10 @@ public class HangPivot {
 
     private void pivotOutward(){    //PIVOTS OUTWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS [INWARD = TOWARDS ROBOT BASE, OUTWARD = TOWARDS ROBOT PERIMETER]
         if(backLimitTouched()){
+            hangPivot.set(0);
+        }
+
+        else{
             if(outwardLimitReached()){
                 hangPivot.set(outwardPivotSpeed);
             }
@@ -121,14 +130,14 @@ public class HangPivot {
                 hangPivot.set(0);
             }
         }
-
-        else{
-            hangPivot.set(0);
-        }
     }
 
     private void pivotInward(){     //PIVOTS INWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS
         if(frontLimitTouched()){   //IF THE FRONT LIMIT IS NOT TOUCHED
+            hangPivot.set(0);
+        }
+
+        else{
             if(inwardLimitReached()){    //IF THE PIVOT ENCODER IS LESS THAN ITS POSITION, PIVOT INWARD
                 hangPivot.set(inwardPivotSpeed);
             }
@@ -136,10 +145,6 @@ public class HangPivot {
             else{   //STOP IF POSITION IS REACHED
                 hangPivot.set(0);
             }
-        }
-
-        else{
-            hangPivot.set(0);
         }
     }
 
