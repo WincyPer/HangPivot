@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   private AHRS navX;
 
   private HangPivot hangPivotClass;
-
+//MASTER
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
