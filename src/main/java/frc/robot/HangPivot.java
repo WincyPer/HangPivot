@@ -31,12 +31,12 @@ public class HangPivot {
     private AHRS navX;
 
     //  VARIABLES [SUBJECT TO CHANGE]  //
-    private final double inwardPivotPos = -150.0;      
-    private final double outwardPivotPos = -200.0;
-    private final double midPivotPos = -175.0; 
+    private final double inwardPivotPos = 150.0;      
+    private final double outwardPivotPos = 200.0;
+    private final double midPivotPos = 175.0; 
     private final double inwardPivotSpeed = 0.25;
     private final double outwardPivotSpeed = -0.25;
-    private final double grabbingHighPivotPos = -1400.0; 
+    private final double grabbingHighPivotPos = 1400.0; 
 
     
     /////////////////////////////////////////////
@@ -98,12 +98,12 @@ public class HangPivot {
         return !frontSwitch.get();
     }
 
-    public boolean outwardEncReached(){      //CHECKS IF PIVOT ENCODER REACHED OUTWARD
-        return pivotEncoder.getPosition() > outwardPivotPos;
+    public boolean outwardEncReached(){      //RETURNS TRUE IF POSITION IS GREATER THAN PIVOT
+        return Math.abs(pivotEncoder.getPosition()) > outwardPivotPos;
     }
 
-    public boolean inwardEncReached(){       //CHECKS IF PIVOT ENCODER REACHED INWARD
-        return pivotEncoder.getPosition() < inwardPivotPos;
+    public boolean inwardEncReached(){       //RETURNS TRUE IF POSITION IS LESS THAN PIVOT
+        return Math.abs(pivotEncoder.getPosition()) < inwardPivotPos;
     }
 
     public boolean grabbingHigh(){      //CHECKS IF PIVOT ENCODER REACHED HIGH BAR
@@ -130,7 +130,7 @@ public class HangPivot {
         }
 
         else{
-            if(outwardEncReached()){
+            if(!outwardEncReached()){
                 hangPivot.set(outwardPivotSpeed);
             }
 
@@ -146,7 +146,7 @@ public class HangPivot {
         }
 
         else{
-            if(inwardEncReached()){    //IF THE PIVOT ENCODER IS LESS THAN ITS POSITION, PIVOT INWARD
+            if(!inwardEncReached()){    //IF THE PIVOT ENCODER IS LESS THAN ITS POSITION, PIVOT INWARD
                 hangPivot.set(inwardPivotSpeed);
             }
 
