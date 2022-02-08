@@ -6,6 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Joystick;
@@ -24,8 +28,9 @@ public class Robot extends TimedRobot {
   private Joystick joystick;
 
   //  HANG  //
-  private WPI_TalonSRX hangPivotMotor;
-  private TalonEncoder hangPivotEncoder;
+  private CANSparkMax hangPivotMotor;
+  private CANSparkMax hangPivotMotor2;
+  private RelativeEncoder hangPivotEncoder;
   private DigitalInput backPivotSwitch;
   private DigitalInput frontPivotSwitch;
   private AHRS navX;
@@ -39,13 +44,14 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     joystick = new Joystick(0);
-    hangPivotMotor = new WPI_TalonSRX(3);   //PORTS ARE NOT FINAL, THESE PORTS ARE FROM OLD ROBOT
-    hangPivotEncoder = new TalonEncoder(hangPivotMotor);    
+    hangPivotMotor = new CANSparkMax(11,MotorType.kBrushless);   //PORTS ARE NOT FINAL, THESE PORTS ARE FROM OLD ROBOT
+    hangPivotMotor2 = new CANSparkMax(12, MotorType.kBrushless);
+    hangPivotEncoder = hangPivotMotor.getEncoder();
     backPivotSwitch = new DigitalInput(3);
     frontPivotSwitch = new DigitalInput(4);
     navX = new AHRS (SPI.Port.kMXP);
 
-    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch);
+    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotMotor2, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch);
 
   }
 
