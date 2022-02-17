@@ -17,11 +17,8 @@ public class HangPivot {
     //                                         //
     /////////////////////////////////////////////
 
-    //  MOTOR (775) & VERSA-PLANETARY ENCODER  //
-    //private MotorController hangPivot;
-    //private MotorController hangPivotTwo;   //OLD ROBOT TEST
-    private MotorControllerGroup hangPivot;
-    private RelativeEncoder pivotEncoder;       
+    private MotorController hangPivot; 
+    private TalonEncoder pivotEncoder;       
 
     //  LIMIT SWITCHES  //
     private DigitalInput frontSwitch;   
@@ -45,10 +42,8 @@ public class HangPivot {
     //                                         //
     /////////////////////////////////////////////
     
-    public HangPivot (MotorController pivotMotor, MotorController pivotMotorTwo, RelativeEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){  
-        //hangPivot = pivotMotor;
-        //hangPivotTwo = pivotMotorTwo;
-        hangPivot = new MotorControllerGroup(pivotMotor, pivotMotorTwo);
+    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){  
+        hangPivot = pivotMotor;
         pivotEncoder = hangPivotEncoder;
         frontSwitch = frontLimitSwitch;
         backSwitch = backLimitSwitch;
@@ -99,19 +94,19 @@ public class HangPivot {
     }
 
     public boolean outwardEncReached(){      //RETURNS TRUE IF POSITION IS GREATER THAN PIVOT
-        return Math.abs(pivotEncoder.getPosition()) > outwardPivotPos;
+        return Math.abs(pivotEncoder.get()) > outwardPivotPos;
     }
 
     public boolean inwardEncReached(){       //RETURNS TRUE IF POSITION IS LESS THAN PIVOT
-        return Math.abs(pivotEncoder.getPosition()) < inwardPivotPos;
+        return Math.abs(pivotEncoder.get()) < inwardPivotPos;
     }
 
     public boolean grabbingHigh(){      //CHECKS IF PIVOT ENCODER REACHED HIGH BAR
-        return pivotEncoder.getPosition() < grabbingHighPivotPos; 
+        return pivotEncoder.get() < grabbingHighPivotPos; 
     }
 
     public boolean middleEncReached() {     //CHECKS IF PIVOT IS PERPENDICULAR TO FLOOR
-        return pivotEncoder.getPosition() < midPivotPos; 
+        return pivotEncoder.get() < midPivotPos; 
     }
 
     /////////////////////////////////////////////
@@ -121,7 +116,7 @@ public class HangPivot {
     /////////////////////////////////////////////
 
     public void resetEnc(){     //RESETS ENCODERS FOR THE PIVOT MOTOR
-        pivotEncoder.setPosition(0);
+        pivotEncoder.reset();
     }
 
     public void pivotOutwardLim(){    //PIVOTS OUTWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS [INWARD = TOWARDS ROBOT BASE, OUTWARD = TOWARDS ROBOT PERIMETER]
@@ -189,7 +184,7 @@ public class HangPivot {
         SmartDashboard.putString("HANG PIVOT STATE", pivotState.toString());
         SmartDashboard.putBoolean("BACK LIMIT", backSwitch.get());
         SmartDashboard.putBoolean("FRONT LIMIT", frontSwitch.get());
-        SmartDashboard.putNumber("PIVOT ENCODER", pivotEncoder.getPosition());
+        SmartDashboard.putNumber("PIVOT ENCODER", pivotEncoder.get());
         SmartDashboard.putNumber("NAVX PITCH", navX.getPitch());
 
         switch(pivotState){
