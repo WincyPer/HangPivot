@@ -5,8 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -29,7 +27,7 @@ public class Robot extends TimedRobot {
   private Joystick joystick;
 
   //  HANG  //
-  private TalonFX hangPivotMotor;
+  private WPI_TalonSRX hangPivotMotor;
   private TalonEncoder hangPivotEncoder;
   private DigitalInput backPivotSwitch;
   private DigitalInput frontPivotSwitch;
@@ -44,7 +42,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     joystick = new Joystick(0);
-    hangPivotMotor = new TalonFX(0)
+    hangPivotMotor = new WPI_TalonSRX(0);
     hangPivotEncoder = new TalonEncoder(hangPivotMotor);
     backPivotSwitch = new DigitalInput(3);
     frontPivotSwitch = new DigitalInput(4);
