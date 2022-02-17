@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -31,7 +30,7 @@ public class Robot extends TimedRobot {
 
   //  HANG  //
   private TalonFX hangPivotMotor;
-  private RelativeEncoder hangPivotEncoder;
+  private TalonEncoder hangPivotEncoder;
   private DigitalInput backPivotSwitch;
   private DigitalInput frontPivotSwitch;
   private AHRS navX;
