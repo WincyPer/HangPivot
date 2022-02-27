@@ -2,9 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+// 6070, 6022, 6039, 6120, 5809
+
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
@@ -37,13 +41,14 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     joystick = new Joystick(0);
-    hangPivotMotor = new WPI_TalonSRX(0);
+    hangPivotMotor = new WPI_TalonSRX(4);
     hangPivotEncoder = new TalonEncoder(hangPivotMotor);
-    backPivotSwitch = new DigitalInput(3);
-    frontPivotSwitch = new DigitalInput(4);
+    backPivotSwitch = new DigitalInput(0);
+    frontPivotSwitch = new DigitalInput(3);
     navX = new AHRS (SPI.Port.kMXP);
 
     hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch);
+    hangPivotMotor.setNeutralMode(NeutralMode.Brake);
 
   }
 
@@ -113,7 +118,7 @@ public class Robot extends TimedRobot {
     }
 
     else if(joystick.getRawButton(7)){
-      
+      hangPivotClass.setPivMid();
     }
 
     else{
