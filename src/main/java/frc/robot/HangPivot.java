@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,7 +19,7 @@ public class HangPivot {
 
     //775 MOTOR
     private MotorController hangPivot; 
-    private TalonEncoder pivotEncoder;       
+    private TalonEncoder pivotEncoder;      
 
     //  LIMIT SWITCHES  //
     private DigitalInput frontSwitch;   
@@ -26,6 +27,7 @@ public class HangPivot {
 
     //  GYRO (NAVX)  //
     private AHRS navX;
+    private PIDController pidController;
 
     //  VARIABLES [SUBJECT TO CHANGE]  //
     //MAX IS 6013.0
@@ -41,7 +43,8 @@ public class HangPivot {
     //                                         //
     /////////////////////////////////////////////
     
-    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch){  
+    public HangPivot (MotorController pivotMotor, TalonEncoder hangPivotEncoder, AHRS gyro, DigitalInput frontLimitSwitch, DigitalInput backLimitSwitch, PIDController PIDcontrol){  
+        pidController = PIDcontrol;
         hangPivot = pivotMotor;
         pivotEncoder = hangPivotEncoder;
         frontSwitch = frontLimitSwitch;
@@ -135,22 +138,34 @@ public class HangPivot {
     }
 
     private void pivotOutwardLim(){    //PIVOTS OUTWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS [INWARD = TOWARDS ROBOT BASE, OUTWARD = TOWARDS ROBOT PERIMETER]
+        
+        pidController.setP(0.00005);
+        pidController.setI(0.00005);
+        pidController.setD(0.00005);
+        
         if(backLimitTouched()){
             hangPivot.set(0);
         }
 
         else{
             if(!outwardEncReached()){
-                hangPivot.set(outwardPivotSpeed);
+                double pivotOutput = pidController.calculate(pivotEncoder.get(), outwardPivotPos);
+                hangPivot.set(pivotOutput);
             }
 
             else{
                 hangPivot.set(0);
+                pidController.reset();
             }
         }
     }
 
     private void pivotInwardLim(){     //PIVOTS INWARD FOR A CERTAIN AMOUNT OF ENCODER COUNTS
+
+        pidController.setP(0.00005);                                    //VALUES ARE NOT FINAL, BEWARE
+        pidController.setI(0.00005);
+        pidController.setD(0.00005);
+
         if(frontLimitTouched()){   //IF THE FRONT LIMIT IS NOT TOUCHED
             hangPivot.set(0);
             pivotEncoder.reset();
@@ -158,11 +173,13 @@ public class HangPivot {
 
         else{
             if(!inwardEncReached()){    //IF THE INWARD ENC LIMIT IS NOT REACHED, PIVOT INWARD
-                hangPivot.set(inwardPivotSpeed);
+                double pivotOutput = pidController.calculate(pivotEncoder.get(), inwardPivotPos);
+                hangPivot.set(pivotOutput);
             }
 
             else{   //STOP IF POSITION IS REACHED
                 hangPivot.set(0);
+                pidController.reset();
             }
         }
     }
@@ -181,6 +198,7 @@ public class HangPivot {
 
     private void stopPivot(){       //STOPS HANG PIVOT
         hangPivot.set(0);
+        pidController.reset();
     }
 
     private void testing(){
@@ -201,8 +219,10 @@ public class HangPivot {
         SmartDashboard.putBoolean("BACK LIMIT", backSwitch.get());
         SmartDashboard.putBoolean("FRONT LIMIT", frontSwitch.get());
         SmartDashboard.putNumber("PIVOT ENCODER", pivotEncoder.get());
-        
-                //  SmartDashboard.putNumber("NAVX PITCH", navX.getPitch());
+        SmartDashboard.putNumber("NAVX PITCH", navX.getPitch());
+        SmartDashboard.putNumber("kP", pidController.getP());
+        SmartDashboard.putNumber("kI", pidController.getI()); 
+        SmartDashboard.putNumber("kD", pidController.getD()); 
 
         switch(pivotState){
             

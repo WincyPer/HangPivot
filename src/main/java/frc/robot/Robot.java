@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.controller.PIDController;
 
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
@@ -31,8 +32,10 @@ public class Robot extends TimedRobot {
   private DigitalInput backPivotSwitch;
   private DigitalInput frontPivotSwitch;
   private AHRS navX;
+  private PIDController pivotPID;
 
   private HangPivot hangPivotClass;
+
 //MASTER
   @Override
   public void robotInit() {
@@ -45,9 +48,10 @@ public class Robot extends TimedRobot {
     hangPivotEncoder = new TalonEncoder(hangPivotMotor);
     backPivotSwitch = new DigitalInput(0);
     frontPivotSwitch = new DigitalInput(3);
+    pivotPID = new PIDController(0, 0, 0);
     navX = new AHRS (SPI.Port.kMXP);
 
-    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch);
+    hangPivotClass = new HangPivot(hangPivotMotor, hangPivotEncoder, navX, frontPivotSwitch, backPivotSwitch, pivotPID);
     hangPivotMotor.setNeutralMode(NeutralMode.Brake);
 
   }
